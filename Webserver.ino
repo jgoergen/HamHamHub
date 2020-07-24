@@ -1,8 +1,8 @@
 // DNSServer had to be patched, info found here: https://github.com/espressif/arduino-esp32/issues/1037
 // https://github.com/me-no-dev/ESPAsyncWebServer
 
-const char* ssid = "Linksys05107";
-const char* password = "xt6lkq0724";
+const char *ssid = "AP_SSID";
+const char *password = "AP_PASS";
 String ip = "";
 
 AsyncWebServer server(80);
@@ -14,18 +14,19 @@ void Webserver_Init()
     Serial.println("Connecting to wifi");
 
     int waitCount = 0;
-    while (WiFi.status() != WL_CONNECTED) 
-    {  
-      delay(500);
-      Serial.print(".");
-      waitCount ++;
+    while (WiFi.status() != WL_CONNECTED)
+    {
+        delay(500);
+        Serial.print(".");
+        waitCount++;
 
-      pixels.setPixelColor(0, pixels.Color(200,150,255));
-      pixels.show();
+        pixels.setPixelColor(0, pixels.Color(200, 150, 255));
+        pixels.show();
 
-      if (waitCount > 10) {
-        ESP.restart();
-      }
+        if (waitCount > 10)
+        {
+            ESP.restart();
+        }
     }
 
     ip = String(WiFi.localIP());
@@ -35,105 +36,103 @@ void Webserver_Init()
     Serial.print("IP address: ");
     Serial.println(ip);
     Serial.println("Starting MDNS as 'hamhamhub'");
-  
-    if (MDNS.begin("hamhamhub")) 
+
+    if (MDNS.begin("hamhamhub"))
     {
-      Serial.println("MDNS responder started");
+        Serial.println("MDNS responder started");
     }
 
     // Add service to MDNS-SD
     MDNS.addService("http", "tcp", 80);
-    
-    pixels.setPixelColor(0, pixels.Color(0,255,0));
+
+    pixels.setPixelColor(0, pixels.Color(0, 255, 0));
     pixels.show();
     getTemperatures(true);
 
     // setup all of the api endpoints for the control webpage to use
     server.on(
-      "/prepstate", 
-      HTTP_GET, 
-      [](AsyncWebServerRequest * request) {
+        "/prepstate",
+        HTTP_GET,
+        [](AsyncWebServerRequest *request) {
+            Serial.println("Prepping state");
+            getTemperatures(false);
 
-      Serial.println("Prepping state");
-      getTemperatures(false);
-      
-      // note: we're 'cache busting' all of these responses so the browser re-requests the api every time
-      AsyncWebServerResponse *response = request->beginResponse(200, "text/html", "OK");
-      request->beginResponse(200);
-      response->addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-      response->addHeader("Pragma", "no-cache");
-      response->addHeader("Expires", "-1");
-      request->send(response);
-    });
-
-    server.on(
-      "/state", 
-      HTTP_GET, 
-      [](AsyncWebServerRequest * request) {
-
-      Serial.println("Sending state");
-      
-      String result;
-      result += String(lastTemp);
-      result += F("|");
-      result += String(lastHum);
-
-      Serial.println(result);
-      
-      // note: we're 'cache busting' all of these responses so the browser re-requests the api every time
-      AsyncWebServerResponse *response = request->beginResponse(200, "text/html", result);
-      request->beginResponse(200);
-      response->addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-      response->addHeader("Pragma", "no-cache");
-      response->addHeader("Expires", "-1");
-      request->send(response);
-    });
+            // note: we're 'cache busting' all of these responses so the browser re-requests the api every time
+            AsyncWebServerResponse *response = request->beginResponse(200, "text/html", "OK");
+            request->beginResponse(200);
+            response->addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            response->addHeader("Pragma", "no-cache");
+            response->addHeader("Expires", "-1");
+            request->send(response);
+        });
 
     server.on(
-      "/history", 
-      HTTP_GET, 
-      [](AsyncWebServerRequest * request) {
+        "/state",
+        HTTP_GET,
+        [](AsyncWebServerRequest *request) {
+            Serial.println("Sending state");
 
-      Serial.println("Prepping state");
-      getTemperatures(false);
-      
-      Serial.print("Sending history of ");
-      Serial.print(readingIndex);
-      Serial.println(" states.");
+            String result;
+            result += String(lastTemp);
+            result += F("|");
+            result += String(lastHum);
 
-      String result;
-      
-      for (byte i = 0; i < readingIndex; i ++) 
-      {
-        result += String(temps[i]);
-        result += F("|");
-        result += String(hums[i]);
+            Serial.println(result);
 
-        if (i < (readingIndex - 1)) {
-          result += F("|");
-        }
-      }
+            // note: we're 'cache busting' all of these responses so the browser re-requests the api every time
+            AsyncWebServerResponse *response = request->beginResponse(200, "text/html", result);
+            request->beginResponse(200);
+            response->addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            response->addHeader("Pragma", "no-cache");
+            response->addHeader("Expires", "-1");
+            request->send(response);
+        });
 
-      Serial.println(result);
-      
-      // note: we're 'cache busting' all of these responses so the browser re-requests the api every time
-      AsyncWebServerResponse *response = request->beginResponse(200, "text/html", result);
-      request->beginResponse(200);
-      response->addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-      response->addHeader("Pragma", "no-cache");
-      response->addHeader("Expires", "-1");
-      request->send(response);
-    });
-  
+    server.on(
+        "/history",
+        HTTP_GET,
+        [](AsyncWebServerRequest *request) {
+            Serial.println("Prepping state");
+            getTemperatures(false);
+
+            Serial.print("Sending history of ");
+            Serial.print(readingIndex);
+            Serial.println(" states.");
+
+            String result;
+
+            for (byte i = 0; i < readingIndex; i++)
+            {
+                result += String(temps[i]);
+                result += F("|");
+                result += String(hums[i]);
+
+                if (i < (readingIndex - 1))
+                {
+                    result += F("|");
+                }
+            }
+
+            Serial.println(result);
+
+            // note: we're 'cache busting' all of these responses so the browser re-requests the api every time
+            AsyncWebServerResponse *response = request->beginResponse(200, "text/html", result);
+            request->beginResponse(200);
+            response->addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            response->addHeader("Pragma", "no-cache");
+            response->addHeader("Expires", "-1");
+            request->send(response);
+        });
+
     // if the url doesn't get picked up as an api endpoint, assume it's a file from SPIFFS
     server.onNotFound(
         [](AsyncWebServerRequest *request) {
-          
             Serial.println("Serving not found");
-            // if the url is not recognized as an api endpoint and doesn't match a local file, 
+            // if the url is not recognized as an api endpoint and doesn't match a local file,
             // redirect it to /index.html
-            if (!handleFileRead(request)) {
-              
+            if (!handleFileRead(request))
+            {
+
                 redirectToIndex(request);
             }
         });
@@ -149,11 +148,12 @@ void Webserver_Update(void)
 bool handleFileRead(AsyncWebServerRequest *request)
 {
     String path = request->url();
-    
+
     // If a folder is requested, send the index file
-    if (path.endsWith("/")) {
-      
-      path += "index.html";
+    if (path.endsWith("/"))
+    {
+
+        path += "index.html";
     }
 
     // Get the MIME type
@@ -173,8 +173,8 @@ bool handleFileRead(AsyncWebServerRequest *request)
 }
 
 void redirectToIndex(AsyncWebServerRequest *request)
-{  
-    Serial.println("Serving redirect");      
+{
+    Serial.println("Serving redirect");
     // note: we're 'cache busting' all of these responses so the browser re-requests the api every time
     AsyncWebServerResponse *response = request->beginResponse(302, "text/plain", "");
     response->addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
