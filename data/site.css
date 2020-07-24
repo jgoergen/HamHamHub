@@ -1,0 +1,233 @@
+/* 
+    HamHamHub
+    v1.0
+*/
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    background: #303542;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 90vh;
+    max-width: 500px;
+    margin: auto;
+    padding: 0;
+    color: #4c5369;
+    background-color: #f8faff;
+    font-family: 'Rubik', sans-serif;
+    font-size: 16px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    font-size: 0.875rem;
+}
+
+/* Current Temp & Humidity */ 
+
+@keyframes zoomIntroCurrent {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.current {
+    flex: 0 0 65%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(-45deg, #fff, #ecf2fa);
+    opacity: 0;
+
+    animation: zoomIntroCurrent 2s 2s normal forwards ease-in-out;
+}
+
+.title {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #fff;
+    border-radius: 15px;
+    font-weight: bold;
+    letter-spacing: -0.01rem;
+    box-shadow: 0 10px 20px 5px rgba(106,191,235, 0.07);
+}
+
+.temperature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 10px 20px 5px rgba(106,191,235, 0.07); 
+    transition: background-color 0.5s ease-out;
+}
+
+.temperature-icon {
+    width: 0.875rem;
+    opacity: 0.5;
+    transition: color 0.5s ease-out;
+}
+
+.temperature .value {
+    font-size: 4rem;
+    letter-spacing: -0.15rem;
+}
+
+.gauge {
+    position: absolute;
+}
+ 
+.ticks {
+    position: absolute;
+    top: calc(50% - 130px);
+    left: calc(50% - 130px);
+    display: block;
+    width: 260px;
+    height: 260px;
+    fill: none;
+}
+
+.ticks .circle {
+    stroke: #6abfeb;
+    stroke-dasharray: 0.5, 2.95;
+    stroke-width: 2;
+    opacity: 0.25;
+}
+
+.humidity-gauge {
+    position: absolute;
+    top: calc(50% - 125px);
+    left: calc(50% - 125px);
+    display: block;
+    width: 250px;
+    height: 250px;
+    fill: none;
+    transform: rotate(180deg);
+}
+
+.humidity-gauge .circle {
+    stroke:#6abfeb;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    transition: stroke-dasharray 1s ease-out;
+  }
+
+.humidity {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    text-align: center;
+}
+.humidity-icon {
+    width: 1rem;
+}
+.humidity .value {
+    font-size: 1.8rem;
+}
+
+/* Ham Ham Hamster */
+
+@keyframes zoomIntroHamHam {
+    0% { width: 85% }
+    100% { width: 18%; }
+}
+
+@keyframes wiggeLeftPaw {
+    0% { transform: translate(-30px, -97px); }
+    20% { transform: translate(-28px, -95px); }
+    35% { transform: translate(-35px, -93px); }
+    50% { transform: translate(-32px, -98px); }
+    60% { transform: translate(-30px, -97px); }
+    70% { transform: translate(-28px, -95px); }
+    85% { transform: translate(-35px, -93px); }
+    100% { transform: translate(-32px, -98px); }
+}
+
+@keyframes wiggleRightPaw {
+    0% { transform: translate(-62px, -95px); }
+    15% { transform: translate(-64px, -91px); }
+    20% { transform: translate(-71px, -101px); }
+    30% { transform: translate(-67px, -98px); }
+    45% { transform: translate(-62px, -95px); }
+    60% { transform: translate(-64px, -91px); }
+    75% { transform: translate(-71px, -101px); }
+    100% { transform: translate(-67px, -98px); }
+}
+
+@keyframes wiggleNose {
+    0% { transform: translate(-64px, -92px) }
+    15% { transform: translate(-63px, -93px); }
+    20% { transform: translate(-68px, -89px); }
+    30% { transform: translate(-63px, -88px); }
+    45% { transform: translate(-67px, -90px); }
+    60% { transform: translate(-61px, -91px); }
+    75% { transform: translate(-63px, -88px); }
+    100% { transform: translate(-65px, -90px); }
+}
+
+#hamham { 
+    position: absolute;
+    bottom: 17rem;
+    right:2rem;
+    width: 85%;
+    min-width: 80px;
+    z-index: 99;
+
+    transform: scaleX(-1);
+    animation: zoomIntroHamHam 2s 2s normal forwards ease-in-out;
+ }
+
+#nose {
+    transform: translate(-65px, -90px);
+    animation: wiggleNose 3s 1s ease infinite;
+}
+#eyeLeft, #eyeRight { fill: #000; }
+#pupilLeft, #pupilRight { fill: #fff; }
+#pawLeft {
+    transform: translate(-32px, -98px);
+    fill: #000;
+    animation: wiggeLeftPaw 3s ease infinite;
+}
+#pawRight { 
+    transform: translate(-67px, -98px);
+    fill: #000; 
+    animation: wiggleRightPaw 4s ease infinite;
+}
+#fur1 { fill: #999; }
+#fur2 { fill: #ccc; }
+#background { fill: transparent; }
+.innerear { fill: #FA8; }
+
+/* History */
+.history {
+    flex: 0 0 35%;
+    background-color: #4c5369;
+    padding: 1rem 1rem 0 1rem;
+}
+
+.history-title {
+    display: inline-block;
+    color: #edf5fc;
+    background-color: rgba(255,255,255,0.05);
+    padding: 0.5rem 1rem;
+    border-radius: 15px;
+}
