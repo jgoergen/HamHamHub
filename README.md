@@ -1,6 +1,8 @@
 # HamHamHub
 Wifi enabled environment sensor for small pets (in this case, an adorable hamster.)
 
+Interface styling by the great Chris Green!
+
 ![Hamhamhub Demonstration](https://raw.githubusercontent.com/jgoergen/HamHamHub/master/HamhamHub.gif)
 
 ## Features
