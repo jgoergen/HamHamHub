@@ -1,6 +1,8 @@
 # HamHamHub
 Wifi enabled environment sensor for small pets (in this case, an adorable hamster.)
 
+![Hamhamhub Demonstration](https://raw.githubusercontent.com/jgoergen/HamHamHub/master/HamhamHub.gif)
+
 ## Features
 * Self hosted mobile friendly status page with 3 day temperature / humidity graph and up to the moment temperature / humidity readings.
 * Led lights inside device give you a quick glance idea of whether the temperature is too high or low for your pet.
